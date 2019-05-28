@@ -7,9 +7,11 @@ class AdminSiteTests(TestCase):
 
     def setUp(self):
         self.client = Client()
-        self.admin = get_user_model().objects.create_superuser('root@gmail.com', '123456')
+        admin_account = ['root@gmail.com', '123456']
+        self.admin = get_user_model().objects.create_superuser(*admin_account)
         self.client.force_login(self.admin)
-        self.user = get_user_model().objects.create_user('normal@gmail.com', '123456')
+        normal_account = {'email': 'normal@gmail.com', 'password': '123456'}
+        self.user = get_user_model().objects.create_user(**normal_account)
 
     def test_users_listed(self):
         """Test that users are listed on user page"""

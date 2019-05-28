@@ -18,7 +18,9 @@ class ModelTests(TestCase):
     def test_new_user_email_normalized(self):
         """Test email for a new user is normalized"""
         email = 'VNSCRIPTKID@gMaIl.com'
-        user = get_user_model().objects.create_user(email=email, password='123456')
+        password = '123456'
+        account = {'email': email, 'password': password}
+        user = get_user_model().objects.create_user(**account)
         self.assertEqual(user.email, email.lower())
 
     def test_new_user_missing_email(self):
@@ -28,19 +30,21 @@ class ModelTests(TestCase):
     def test_new_user_missing_password(self):
         email = 'mosalah@gmail.com'
         try:
-            user = get_user_model().objects.create_user(email=email, password=None)
+            get_user_model().objects.create_user(email=email, password=None)
         except ValueError as error:
             self.assertEqual(error.args[0], 'missing password')
 
     def test_new_user_default_props(self):
         email = 'mosalah@gmail.com'
-        user = get_user_model().objects.create_user(email=email, password='123456')
+        password = '123456'
+        user = get_user_model().objects.create_user(email, password)
         self.assertEqual(user.is_staff, False)
         self.assertEqual(user.is_active, True)
 
     def test_new_user_email_normalized_strip_spaces(self):
         email = '   mosalah@gmail.com  '
-        user = get_user_model().objects.create_user(email=email, password='123456')
+        password = '123456'
+        user = get_user_model().objects.create_user(email, password)
         self.assertEqual(user.email, email.strip())
 
     def test_create_superuser(self):
